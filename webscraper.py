@@ -62,7 +62,8 @@ for item in zip(get_names(basic_info),get_prices(basic_info),get_details(basic_i
     print(item)
     brand = item[0].split()[0]
     model = item[0].split()[1]
-    
+    if(item[1] == "цена по договаряне"):
+        continue
     price = int(item[1].split()[0].replace(",",""))
     year = item[2].split()[0].replace(",","")
     fuel = "d" if item[2].split()[1].replace(",","") == "Дизел" else "p"
