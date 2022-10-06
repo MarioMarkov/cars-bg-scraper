@@ -2,13 +2,9 @@ from unicodedata import name
 from bs4 import BeautifulSoup
 from requests import get
 import pandas as pd
-import os
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from webdriver_manager.chrome import ChromeDriverManager
-
-import time
-
 
 #exec(open('html_download.py').read())
 
@@ -52,7 +48,7 @@ def get_details(basic_info):
             details.append(i.find_all("div",attrs = {"class": "mdc-typography--body1"})[0].text.strip())
     return details
 
-data = {"brand": [],"model":[], "price": [] , "year": [],"fuel": [], "kms":[]}
+data = {"brand": [],"model":[] , "year": [],"fuel": [], "kms":[], "price": []}
 
 df = pd.DataFrame(data)
 
@@ -68,8 +64,8 @@ for item in zip(get_names(basic_info),get_prices(basic_info),get_details(basic_i
     year = item[2].split()[0].replace(",","")
     fuel = "d" if item[2].split()[1].replace(",","") == "Дизел" else "p"
     kms = "" if len(item[2].split())<3 else int(item[2].split()[2].replace(",",""))
-    row = pd.DataFrame({"brand": [brand],"model":[model], "price": [price] , "year": [year],"fuel": [fuel], "kms":[kms]})
+    row = pd.DataFrame({"brand": [brand],"model":[model] , "year": [year],"fuel": [fuel], "kms":[kms], "price": [price]})
     df = pd.concat([df, row])
     
-
+df = df.drop_duplicates()
 df.to_csv('cars-data.csv', index=False)
