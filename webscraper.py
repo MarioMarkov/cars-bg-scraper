@@ -22,8 +22,9 @@ html_soup = BeautifulSoup(response_from_file,'html.parser')
 
 basic_info =[]
 content_list = html_soup.find_all('div',attrs={'class': 'mdc-card offer-item'})
+
 for item in content_list:
-    basic_info.append(item.find_all('div', attrs={'class': 'mdc-card__primary-action'}))
+    basic_info.append(item.find_all('div', attrs={'class': 'mdc-card offer-item'}))
 
 
 def get_names(basic_info):
@@ -48,24 +49,33 @@ def get_details(basic_info):
             details.append(i.find_all("div",attrs = {"class": "mdc-typography--body1"})[0].text.strip())
     return details
 
+def get_id(basic_info):
+    ids = [] 
+    for item in basic_info:
+        for i in item:
+            ids.append(i.find_all("div",attrs = {"class": "mdc-card offer-item"})[0])
+    return ids
+
 data = {"brand": [],"model":[] , "year": [],"fuel": [], "kms":[], "price": []}
 
 df = pd.DataFrame(data)
 
 
-
-for item in zip(get_names(basic_info),get_prices(basic_info),get_details(basic_info)):
+for item in get_id(basic_info):
     print(item)
-    brand = item[0].split()[0]
-    model = item[0].split()[1]
-    if(item[1] == "цена по договаряне"):
-        continue
-    price = int(item[1].split()[0].replace(",",""))
-    year = item[2].split()[0].replace(",","")
-    fuel = "d" if item[2].split()[1].replace(",","") == "Дизел" else "p"
-    kms = "" if len(item[2].split())<3 else int(item[2].split()[2].replace(",",""))
-    row = pd.DataFrame({"brand": [brand],"model":[model] , "year": [year],"fuel": [fuel], "kms":[kms], "price": [price]})
-    df = pd.concat([df, row])
+
+# for item in zip(get_names(basic_info),get_prices(basic_info),get_details(basic_info),get_id(basic_info)):
+#     print(item)
+#     brand = item[0].split()[0]
+#     model = item[0].split()[1]
+#     if(item[1] == "цена по договаряне"):
+#         continue
+#     price = int(item[1].split()[0].replace(",",""))
+#     year = item[2].split()[0].replace(",","")
+#     fuel = "d" if item[2].split()[1].replace(",","") == "Дизел" else "p"
+#     kms = "" if len(item[2].split())<3 else int(item[2].split()[2].replace(",",""))
+#     row = pd.DataFrame({"brand": [brand],"model":[model] , "year": [year],"fuel": [fuel], "kms":[kms], "price": [price]})
+#     df = pd.concat([df, row])
     
-df = df.drop_duplicates()
-df.to_csv('cars-data.csv', index=False)
+# df = df.drop_duplicates()
+# df.to_csv('cars-data.csv', index=False)
