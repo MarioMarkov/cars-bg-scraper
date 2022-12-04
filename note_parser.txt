@@ -1,2 +1,0 @@
-Only 
-html_soup = BeautifulSoup(response_from_file,'html.parser')
