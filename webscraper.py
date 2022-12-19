@@ -37,7 +37,7 @@ strainer = SoupStrainer('div', attrs={'class': 'mdc-card offer-item'})
 # Get response from file and cook it into soup
 html_soup = BeautifulSoup(response_from_file,'html.parser', parse_only = strainer)
 
-print("success soup")
+print("Soup Preparation done")
 # Array holding a div card with the cars info
 basic_info =[]
 content_list = html_soup.find_all('div',attrs={'class': 'mdc-card offer-item'})
@@ -78,8 +78,7 @@ def get_details(basic_info):
     return details
 
 # Define dataset structure
-data = {"id" :[],"brand": [],"model":[] , "year": [],
-"fuel": [], "kms":[], "price": [],"transmission":[]}
+data = {"id" :[],"brand": [],"model":[] , "year": [],"fuel": [], "kms":[], "price": []}
 df = pd.DataFrame(data)
 
 
@@ -111,7 +110,7 @@ for item in zip(get_names(basic_info),get_prices(basic_info),get_details(basic_i
             fuel = "missing"
         # if the second one is fuel 
         else:
-            kms = "missing"
+            kms = None
             if item[2].split()[1].replace(",","") == 'Дизел': fuel = 'd'
             elif item[2].split()[1].replace(",","") == 'Газ/Бензин': fuel = 'g'
             elif item[2].split()[1].replace(",","") == 'Електричество': fuel = 'e'
