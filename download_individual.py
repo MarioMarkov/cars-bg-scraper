@@ -32,7 +32,7 @@ color_name_en = {
     "хамелеон":"chameleon"
 }
 
-color_name_en = {
+type_of_car_en = {
     "седан": "sedan",
     "хечбек":"hatchback",
     "комби":"combi",
@@ -49,7 +49,7 @@ for index, car in cars.iterrows():
     #file = open('individual.html', 'a', encoding="utf-8")
     
     #Make beutiful soup from this 
-    strainer = SoupStrainer('div', attrs={'class': 'text-copy'})
+    #strainer = SoupStrainer('div', attrs={'class': 'text-copy'})
     html_soup = BeautifulSoup(driver.page_source,'html.parser')
 
     #Extract a div with text copy and wanted data
@@ -58,16 +58,34 @@ for index, car in cars.iterrows():
         continue
 
     #Add the data to the car with the car.id from cars-data.csv
-    cars.at[index,'transmission'] = 1 if  'Автоматични скорости' in details[1].text else 0
+    cars.at[index,'transmission'] = 1 if  'автоматични скорости' in details[1].text.lower() else 0
     cars.at[index,'2door'] = 1 if  '2/3 врати' in details[1].text else 0 
 
     
-    matches = [word in details[1].text for word in color_name_en.keys()]
+    matches_color = [word if word in details[1].text.lower()  else None for word in color_name_en.keys()]
+    
+    if any(matches_color):
+        color = None
+        for item in matches_color:
+            if item is not None: 
+                color = item
+                break
 
-    if any(matches):
-        cars.at[index,'color'] = matches[0]
+        cars.at[index,'color'] = color_name_en[color]
     else:
         cars.at[index,'color'] = None 
+
+    matches_type = [  word if word in details[1].text.lower()  else None  for word in type_of_car_en.keys()]
+
+    if any(matches_type):
+        type = None
+        for item in matches_type:
+            if item is not None: 
+                type = item
+                break
+        cars.at[index,'type'] = type_of_car_en[type]
+    else:
+        cars.at[index,'type'] = None 
 
     print(cars.loc[cars['id'] == car.id])
 
