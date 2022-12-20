@@ -18,15 +18,15 @@ files = os.listdir(path)
 
 
 
-# with open('all_html.html','a',encoding='UTF-8') as all_html:
-#     for file in files:
-#         with open(path + '/' + file, "r", encoding='utf-8-sig') as single_file:
-#             html_as_string = single_file.read()
-#             all_html.write(html_as_string)
-#         single_file.close()
+with open('all_html.html','a',encoding='UTF-8') as all_html:
+    for file in files:
+        with open(path + '/' + file, "r", encoding='utf-8-sig') as single_file:
+            html_as_string = single_file.read()
+            all_html.write(html_as_string)
+        single_file.close()
 
 
-# all_html.close()
+all_html.close()
         
 
 

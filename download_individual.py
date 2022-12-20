@@ -89,6 +89,7 @@ for index, car in cars.iterrows():
 
     print(cars.loc[cars['id'] == car.id])
 
+cars = cars[['id','brand','model','year','fuel','kms','transmission','2door','color','type','price']] 
 cars.to_csv('cars-data2.csv', index=False)
 driver.close()  
 
