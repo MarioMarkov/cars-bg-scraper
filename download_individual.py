@@ -5,8 +5,10 @@ from webdriver_manager.chrome import ChromeDriverManager
 import time
 import pandas as pd
 import re
+import lxml
+import cchardet
 
-driver = webdriver.Chrome(ChromeDriverManager().install())
+
 cars = pd.read_csv('cars-data.csv')
 
 color_name_en = {
@@ -44,14 +46,24 @@ type_of_car_en = {
     "ван" :"van"
 }
 
+options = webdriver.ChromeOptions()
+prefs = {"profile.managed_default_content_settings.images": 2}
+options.add_experimental_option("prefs", prefs)
+options.add_argument('--disable-gpu')
+options.add_argument("--disable-extensions")
+options.add_argument("--headless")
+driver = webdriver.Chrome(ChromeDriverManager().install(),options = options )
+
 for index, car in cars.iterrows():
     url = 'https://www.cars.bg/offer/{id}'
+    # requests_session.get()
     driver.get(url.format(id = car.id))
     #file = open('individual.html', 'a', encoding="utf-8")
     
-    #Make beutiful soup from this 
-    #strainer = SoupStrainer('div', attrs={'class': 'text-copy'})
-    html_soup = BeautifulSoup(driver.page_source,'html.parser')
+    # Make beutiful soup from this 
+    # strainer = SoupStrainer('div', attrs={'class': 'text-copy'})
+    # make parser lxml
+    html_soup = BeautifulSoup(driver.page_source,'lxml')
 
     #Extract a div with text copy and wanted data
     details = html_soup.find_all('div',attrs={'class':'text-copy'})
@@ -60,9 +72,7 @@ for index, car in cars.iterrows():
 
     all_details = details[1].text.lower().split(",")
     all_details = [i.strip() for i in all_details]
-    print(all_details)
-
-
+    
     #Add the data to the car with the car.id from cars-data.csv
     cars.at[index,'transmission'] = 1 if  'автоматични скорости' in all_details else 0
     cars.at[index,'2door'] = 1 if  '2/3 врати' in all_details else 0 
