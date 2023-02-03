@@ -27,9 +27,6 @@ with open('all_html.html','a',encoding='UTF-8') as all_html:
 
 
 all_html.close()
-        
-
-
 
 response_from_file = open('all_html.html','r', encoding="utf-8")
 
@@ -91,7 +88,13 @@ for item in zip(get_names(basic_info),get_prices(basic_info),get_details(basic_i
 
     id = item[3]
     brand = item[0].split()[0]
-    model = item[0].split()[1]
+    if brand == "Alfa" or brand == "Land" :
+        brand = brand + item[0].split()[1]
+        model = item[0].split()[2]
+    else:
+        brand = item[0].split()[0]
+        model = item[0].split()[1]
+        
 
     if(item[1] == "цена по договаряне"):
         continue
@@ -113,12 +116,16 @@ for item in zip(get_names(basic_info),get_prices(basic_info),get_details(basic_i
             kms = None
             if item[2].split()[1].replace(",","") == 'Дизел': fuel = 'd'
             elif item[2].split()[1].replace(",","") == 'Газ/Бензин': fuel = 'g'
+            elif item[2].split()[1].replace(",","") == 'Хибрид': fuel = 'h'
+            elif item[2].split()[1].replace(",","") == 'Метан/Бензин': fuel = 'm'
             elif item[2].split()[1].replace(",","") == 'Електричество': fuel = 'e'
             else : fuel = 'p'
     # if there are 3 properties
     else:
         if item[2].split()[1].replace(",","") == 'Дизел': fuel = 'd'
         elif item[2].split()[1].replace(",","") == 'Газ/Бензин': fuel = 'g'
+        elif item[2].split()[1].replace(",","") == 'Хибрид': fuel = 'h'
+        elif item[2].split()[1].replace(",","") == 'Метан/Бензин': fuel = 'm'
         elif item[2].split()[1].replace(",","") == 'Електричество': fuel = 'e'
         else : fuel = 'p'
         kms = int(item[2].split()[2].replace(",","").replace(" км.",""))
