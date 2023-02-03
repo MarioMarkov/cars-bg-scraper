@@ -81,10 +81,10 @@ def get_details(basic_info):
 data = {"id" :[],"brand": [],"model":[] , "year": [],"fuel": [], "kms":[], "price": []}
 df = pd.DataFrame(data)
 
-
-#TODO Fix item[2] not having kms or fuel
+euro_prices = 0
 for item in zip(get_names(basic_info),get_prices(basic_info),get_details(basic_info),get_ids(content_list)):
-    print(item)
+    print(item[1].encode("utf-8"))
+    
 
     #(Opel,Astra), (20 000), (2005, diesel,200 000 km), (id)
     #('Hyundai Terracan 2.9, CDI', '7,300 лв.', '2002, Дизел, 168350 км.', '633d762fe4515d92cd0d8103')
@@ -96,7 +96,16 @@ for item in zip(get_names(basic_info),get_prices(basic_info),get_details(basic_i
     if(item[1] == "цена по договаряне"):
         continue
 
-    price = int(item[1].split()[0].replace(",",""))
+    # Check if price includes EUR then multiply it by 1.95
+    
+    if item[1].find("EUR"):
+        euro_prices = euro_prices + 1
+        price = int(item[1].split()[0].replace(",","")) * 1.95
+    else :
+        price = int(item[1].split()[0].replace(",",""))
+
+
+
     year = item[2].split()[0].replace(",","")
     
     
@@ -129,3 +138,5 @@ for item in zip(get_names(basic_info),get_prices(basic_info),get_details(basic_i
     
 df = df.drop_duplicates()
 df.to_csv('cars-data.csv', index=False)
+
+print(euro_prices)
