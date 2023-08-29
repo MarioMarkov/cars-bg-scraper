@@ -7,16 +7,11 @@ import lxml
 import cchardet
 # import OS module
 import os
-#exec(open('html_download.py').read())
-
-
 
 # Get the list of all files and directories
 path = "./html_files"
 
 files = os.listdir(path)
-
-
 
 with open('all_html.html','a',encoding='UTF-8') as all_html:
     for file in files:
@@ -24,7 +19,6 @@ with open('all_html.html','a',encoding='UTF-8') as all_html:
             html_as_string = single_file.read()
             all_html.write(html_as_string)
         single_file.close()
-
 
 all_html.close()
 
@@ -81,8 +75,6 @@ df = pd.DataFrame(data)
 euro_prices = 0
 for item in zip(get_names(basic_info),get_prices(basic_info),get_details(basic_info),get_ids(content_list)):
     print(item)
-    
-
     #(Opel,Astra), (20 000), (2005, diesel,200 000 km), (id)
     #('Hyundai Terracan 2.9, CDI', '7,300 лв.', '2002, Дизел, 168350 км.', '633d762fe4515d92cd0d8103')
 
@@ -107,10 +99,7 @@ for item in zip(get_names(basic_info),get_prices(basic_info),get_details(basic_i
     else :
         price = int(item[1].split()[0].replace(",",""))
 
-
-
     year = item[2].split()[0].replace(",","")
-    
     
     # Determine which properties are in the [2] field 
     # if there are only two properties
@@ -145,5 +134,4 @@ for item in zip(get_names(basic_info),get_prices(basic_info),get_details(basic_i
     
 df = df.drop_duplicates()
 df.to_csv('cars-data.csv', index=False)
-
 print(euro_prices)

@@ -4,7 +4,13 @@ from selenium.webdriver.common.keys import Keys
 from webdriver_manager.chrome import ChromeDriverManager
 import time
 
-driver = webdriver.Chrome(ChromeDriverManager().install())
+options = webdriver.ChromeOptions()
+prefs = {"profile.managed_default_content_settings.images": 2}
+options.add_experimental_option("prefs", prefs)
+options.add_argument('--disable-gpu')
+options.add_argument("--disable-extensions")
+options.add_argument("--headless")
+driver = webdriver.Chrome(ChromeDriverManager().install(),options = options )
 
 brands = [1,4,8,9,
 10,15,16,17,19,
@@ -29,6 +35,5 @@ for brand in brands:
         file = open(filepath.format(brand = brand), 'a', encoding="utf-8")
         file.write(driver.page_source)
     file.close()
-   
 
 driver.close()

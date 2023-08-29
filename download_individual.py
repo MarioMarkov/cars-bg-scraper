@@ -8,9 +8,7 @@ import re
 import lxml
 import cchardet
 
-
 cars = pd.read_csv('cars-data.csv')
-
 color_name_en = {
     "син": "blue",
     "бял":"white",
@@ -55,6 +53,9 @@ options.add_argument("--headless")
 driver = webdriver.Chrome(ChromeDriverManager().install(),options = options )
 
 for index, car in cars.iterrows():
+    
+    if index % 1000 == 0:
+        cars.to_csv('cars-data3.csv', index=False)
     url = 'https://www.cars.bg/offer/{id}'
     # requests_session.get()
     driver.get(url.format(id = car.id))
